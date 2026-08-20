@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Levantamento de Paredes</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>body{font-family:Arial,sans-serif;background:#f2f4f7;margin:10px}.card{background:white;padding:15px;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.1)}label{display:block;margin-top:10px;font-weight:bold}input,select,textarea{width:100%;padding:8px;box-sizing:border-box}.btn{    width:100%; padding:12px;  margin-top:10px;   color:#fff;    border:none;    border-radius:6px;    font-size:14px;    cursor:pointer;}.btn-add{   background:#28a745;}.btn-clear{    background:#6c757d;}.btn-export{    background:#005A9C;};color:#fff;border:none;border-radius:6px}.btn-clear{    background:#6c757d;}</style>
+</head><body><div class="card"><h2>Levantamento de Paredes</h2>
+<label>ID_AMBIENTE</label><input id="id_ambiente" maxlength="9">
+<label>CHAVEID_PAREDE</label><input id="id_parede" maxlength="6">
+<label>Tipo</label><select id="tipo"><option></option><option>Alvenaria</option><option>Drywall</option><option>Madeira</option><option>Vidro</option></select>
+<label>Material</label><select id="material"><option></option><option>Bloco Cerâmico</option><option>Bloco de Concreto</option><option>Madeira</option><option>Gesso ST</option><option>Gesso RU</option><option>Gesso RF</option><option>PVC</option><option>Vidro Temperado</option></select>
+<label>Comprimento (m)</label><input type="number" step="0.01" id="comprimento">
+<label>Altura (m)</label><input type="number" step="0.01" id="altura">
+<label>Entreforro (m)</label><input type="number" step="0.01" id="entreforro">
+<label>Pé-direito (m)</label><input type="number" step="0.01" id="pedireito">
+<label>Altura Rodapé (m)</label><input type="number" step="0.01" id="rodape">
+<label>Acabamento</label><select id="acabamento"><option></option><option>Pintura Acrílica</option><option>Pintura Epóxi</option><option>Painéis em Madeira</option><option>Cerâmica</option><option>N/A</option></select>
+<label>Isolamento Interno</label><select id="isolamento"><option></option><option>Lã de PET</option><option>N/A</option></select>
+<label>Observações</label><textarea id="observacoes"></textarea>
+<p>Registros: <span id="contador">0</span></p>
+<button class="btn btn-add" onclick="adicionarParede()">
+ADICIONAR PAREDE
+</button>
+
+<button class="btn btn-clear" onclick="limparFormulario()">
+LIMPAR CAMPOS
+</button>
+
+<button class="btn btn-export" onclick="exportarExcel()">
+EXPORTAR EXCEL
+</button>
+</div>
+<script>
+function exportarExcel(){    if(bancoParedes.length === 0){        alert("Nenhum registro encontrado.");        return;    }
+
+    const ws =    XLSX.utils.json_to_sheet(bancoParedes    );
+
+    const wb =
+    XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(        wb,        ws,        "PAREDES"    );
+
+    XLSX.writeFile(        wb,        "LEVANTAMENTO_PAREDES.xlsx"    );bancoParedes = [];localStorage.removeItem("bancoParedes");document.getElementById("contador").innerText = "0";}
+
+function limparFormulario(){
+    document.getElementById("id_ambiente").value = "";
+    document.getElementById("id_parede").value = "";
+    document.getElementById("tipo").value = "";
+    document.getElementById("material").value = "";
+    document.getElementById("comprimento").value = "";
+    document.getElementById("altura").value = "";
+    document.getElementById("entreforro").value = "";
+    document.getElementById("pedireito").value = "";
+    document.getElementById("rodape").value = "";
+    document.getElementById("acabamento").value = "";
+    document.getElementById("isolamento").value = "";
+    document.getElementById("observacoes").value = "";}
+let bancoParedes=JSON.parse(localStorage.getItem('bancoParedes')||'[]');document.getElementById('contador').textContent=bancoParedes.length;
+function adicionarParede(){
+    const registro = {        ID_AMBIENTE:
+        document.getElementById("id_ambiente").value,
+
+        CHAVEID_PAREDE:       document.getElementById("id_parede").value,
+
+        Tipo:        document.getElementById("tipo").value,
+
+        Material:        document.getElementById("material").value,
+
+        Comprimento:        document.getElementById("comprimento").value,
+
+        Altura:
+        document.getElementById("altura").value,
+
+        Entreforro:
+        document.getElementById("entreforro").value,
+
+        PeDireito:
+        document.getElementById("pedireito").value,
+
+        AlturaRodape:
+        document.getElementById("rodape").value,
+
+        Acabamento:
+        document.getElementById("acabamento").value,
+
+        IsolamentoInterno:
+        document.getElementById("isolamento").value,
+
+        Observacoes:
+        document.getElementById("observacoes").value
+
+    };
+
+    bancoParedes.push(registro);
+
+    localStorage.setItem(
+        "bancoParedes",
+        JSON.stringify(bancoParedes)
+    );
+
+    document.getElementById("contador").innerText =
+        bancoParedes.length;
+
+    alert("Registro gravado com sucesso.");
+
+}``
+</script></body></html>
